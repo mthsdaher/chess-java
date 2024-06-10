@@ -35,18 +35,26 @@ public class ChessMatch {
 		Position source = sourcePosition.toPosition(); //change the position to the position in the matrix
 		Position target = targetPosition.toPosition();
 		validateSourcePosition(source); //validate the piece position
+		validateTargetPosition(source, target);
 		Piece capturedPiece = makeMove(source, target);
 		return (ChessPiece)capturedPiece; //downcasting para ChessPiece
 	}
 
 	private void validateSourcePosition(Position position) {
-		if(!board.thereIsAPiece(position)) {//check if there is no piece on the original position
+		if (!board.thereIsAPiece(position)) {
 			throw new ChessException("There is no piece on source position");
 		}
-		if (board.piece(position).isThereAnyPossibleMove());{
-			throw new ChessException("There is no possible moves for the choses piece");
+		if (!board.piece(position).isThereAnyPossibleMove()) {
+			throw new ChessException("There is no possible moves for the chosen piece");
 		}
 	}
+		
+	private void validateTargetPosition(Position source, Position target) {
+		if (!board.piece(source).possibleMove(target)) {
+			throw new ChessException("The chosen piece can't move to target position");
+		}
+	}
+		
 	private void placeNewPiece(char column, int row, ChessPiece piece) {
 		board.placePiece(piece, new ChessPosition(column, row).toPosition());
 	}
